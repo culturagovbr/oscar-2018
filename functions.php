@@ -577,10 +577,13 @@ function update_user_cnpj( $user_id )
 	}
 }
 
-if( !empty($_GET['debug_email']) ){
-	if(!wp_mail( 'il.com', 'An subject', 'My message' )){
-		error_log('O envio de email, Falhou!', 0);
-	}else{ 
-		die('Email enviado');
-	}
-}
+/**
+ * Sentry
+ */
+require(get_template_directory() . '/inc/sentry/lib/Raven/Autoloader.php');
+Raven_Autoloader::register();
+$client = new Raven_Client('https://fe50903b200c48c4ac1bbfdb1278a2d5:b38fecd5b1724147a2b14f2c05a6fcc6@sentry.io/207545');
+$error_handler = new Raven_ErrorHandler($client);
+$error_handler->registerExceptionHandler();
+$error_handler->registerErrorHandler();
+$error_handler->registerShutdownFunction();
