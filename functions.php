@@ -208,7 +208,7 @@ function upload_oscar_video() {
         $oscar_options = get_option('oscar_options');
         $uploads = wp_upload_dir();
         // $path = $uploads['basedir'] . '/oscar-videos';
-	   $path = '/var/www/html/owncloud/data/filmesoscar2018/filmesoscar2018';
+	    $path = '/var/www/html/owncloud/data/filmesoscar2018/filmesoscar2018';
 
         if (!file_exists( $path )) {
             mkdir($path, 0777, true);
@@ -226,6 +226,10 @@ function upload_oscar_video() {
             list($txt, $ext) = explode(".", $name); // Extract the name and extension of the file
             if (in_array($ext, $valid_formats)) { // If the file is valid go on.
                 if ($size < intval($oscar_options['oscar_movie_max_size'])*pow(1024,3) ) { //  Check if the file size is more than defined in options page
+
+                    // Notice for admin
+                    admin_notice_on_upload_start( $_SESSION['logged_user_id'], $name );
+
                     $file_name = $_FILES['oscarVideo']['name'];
                     $tmp = $_FILES['oscarVideo']['tmp_name'];
 
@@ -577,6 +581,29 @@ function update_user_cnpj( $user_id )
 		}
 	}
 }
+
+/**
+ * Admin notice on upload start
+ */
+function admin_notice_on_upload_start( $user_id, $movie ) {
+    date_default_timezone_set('America/Sao_Paulo');
+    $now = date("H:i:s - d/m/Y");
+    $user = get_user_by( 'ID', $user_id );
+    $name = 'Inscrições Oscar 2018 - Upload iniciado';
+    $oscar_options = get_option('oscar_options');
+    $oscar_monitoring_emails = explode(',', $oscar_options['oscar_monitoring_emails']);
+    $oscar_monitoring_emails = array_map('trim', $oscar_monitoring_emails);
+
+    $to = $oscar_monitoring_emails;
+    $subject = 'Upload de vídeo iniciado';
+    $body = 'O upload de um vídeo acaba de ser iniciado ('. $now .'). Filme: ' . $movie;
+    
+    // Send email
+    if( !wp_mail($to, $subject, $body ) ){
+        error_log("O envio de email para: " . $to . ', Falhou!', 0);
+    }
+}
+
 
 /**
  * Sentry
