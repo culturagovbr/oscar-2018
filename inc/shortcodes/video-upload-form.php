@@ -1,12 +1,13 @@
 <?php
 function oscar_video_upload_form( $atts ){
     $current_user = wp_get_current_user();
-    if( get_user_meta( $current_user->ID, '_oscar_video_sent', true ) ){
+    if( get_user_meta( $current_user->ID, '_oscar_video_sent!', true ) ){
         $return_code = 'Parece que você já enviou um vídeo.';
     }else{
         $oscar_options = get_option('oscar_options');
         $return_code = '
-        <p>Resolução mínima 720p, Formatos permitidos: <span>'. $oscar_options['oscar_movie_extensions'] .'<span>.</p>
+        <p>Tamanho máximo para o arquivo de vídeo: <b>20Gb</b>. Velocidade de conexão mínima sugerida: <b>10Mb</b>.</p>
+        <p>Resolução mínima <b>720p</b>. Formatos permitidos: <b>'. $oscar_options['oscar_movie_extensions'] .'</b>.</p>
         <form id="oscar-video-form" method="post" action="'. get_the_permalink() .'">
             <div class="form-group text-center video-drag-area dropzone">
                 <input type="file" id="oscar-video" name="oscar-video" class="inputfile">

@@ -208,7 +208,7 @@ function upload_oscar_video() {
         $oscar_options = get_option('oscar_options');
         $uploads = wp_upload_dir();
         // $path = $uploads['basedir'] . '/oscar-videos';
-	$path = '/var/www/html/owncloud/data/filmesoscar2018/filmesoscar2018';
+	   $path = '/var/www/html/owncloud/data/filmesoscar2018/filmesoscar2018';
 
         if (!file_exists( $path )) {
             mkdir($path, 0777, true);
@@ -225,8 +225,7 @@ function upload_oscar_video() {
         if (strlen($name)) { // Check if the file is selected or cancelled after pressing the browse button.
             list($txt, $ext) = explode(".", $name); // Extract the name and extension of the file
             if (in_array($ext, $valid_formats)) { // If the file is valid go on.
-                // if ($size < 5e+9) { //  Check if the file size is more than 5 Gb
-                if ($size < intval($oscar_options['oscar_movie_max_size'])*pow(1024,3) ) { //  Check if the file size is more than 5 Gb
+                if ($size < intval($oscar_options['oscar_movie_max_size'])*pow(1024,3) ) { //  Check if the file size is more than defined in options page
                     $file_name = $_FILES['oscarVideo']['name'];
                     $tmp = $_FILES['oscarVideo']['tmp_name'];
 
@@ -244,16 +243,18 @@ function upload_oscar_video() {
                         // Check if it the file move successfully.
                         if (move_uploaded_file($tmp, $path . '/' . $unique_folder_based_on_cnpj .'/'. $name)) {
                             update_user_meta( $_SESSION['logged_user_id'], '_oscar_movie_name', $name );
-			    update_user_meta( $_SESSION['logged_user_id'], '_oscar_movie_path', $uploads['baseurl'] . '/oscar-videos/filmesoscar2018' . '/' . $unique_folder_based_on_cnpj .'/'. $name );
+                            update_user_meta( $_SESSION['logged_user_id'], '_oscar_movie_path', $uploads['baseurl'] . '/oscar-videos/filmesoscar2018' . '/' . $unique_folder_based_on_cnpj .'/'. $name );
                             update_user_meta( $_SESSION['logged_user_id'], '_oscar_video_sent', true );
                             echo $oscar_options['oscar_movie_uploaded_message'];
                             oscar_video_sent_confirmation_email( $_SESSION['logged_user_id'] );
                         } else {
                             echo 'Falha ao mover arquivo para pasta destino';
+                            error_log('Falha ao mover arquivo para pasta destino: ' . $path . '/' . $unique_folder_based_on_cnpj .'/'. $name, 0);
                         }
                     }
                 } else {
                     echo 'O tamanho do arquivo excede o limite de '. $oscar_options['oscar_movie_max_size'] .'Gb.';
+                    error_log('O tamanho do arquivo excede o limite definido. User ID: ' . $_SESSION['logged_user_id'], 0);
                 }
             } else {
                 echo 'Formato de arquivo inválido.';
