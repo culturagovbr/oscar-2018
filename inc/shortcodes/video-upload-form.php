@@ -1,7 +1,7 @@
 <?php
 function oscar_video_upload_form( $atts ){
     $current_user = wp_get_current_user();
-    if( get_user_meta( $current_user->ID, '_oscar_video_sent!', true ) ){
+    if( get_user_meta( $current_user->ID, '_oscar_video_sent', true ) ){
         $return_code = 'Parece que você já enviou um vídeo.';
     }else{
         $oscar_options = get_option('oscar_options');

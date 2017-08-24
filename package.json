@@ -1,7 +1,7 @@
 {
-  "name": "mapas-culturais",
+  "name": "oscar-2018",
   "version": "1.0.0",
-  "description": "Mapas culturais - Template WP",
+  "description": "Oscar 2018 - Template WP",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

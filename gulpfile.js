@@ -24,7 +24,7 @@ gulp.task('js', function () {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./assets/js/dist/'))
         .pipe(notify('Task JS finished!'))
-        .pipe(livereload());
+        // .pipe(livereload());
 });
 
 gulp.task('css', function() {
@@ -38,11 +38,11 @@ gulp.task('css', function() {
         .pipe(concat('main.min.css'))
         .pipe(gulp.dest('./assets/css/dist/'))
         .pipe(notify('Task CSS finished!'))
-        .pipe(livereload());
+        // .pipe(livereload());
 });
 
 gulp.task('watch', function() {
-    livereload.listen();
+    // livereload.listen();
     gulp.watch('./assets/css/src/*.css', ['css']);
     gulp.watch('./assets/js/src/*.js', ['js']);
 });
