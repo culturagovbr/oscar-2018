@@ -627,6 +627,7 @@ function deadline_for_subscriptions() {
 
     if( $now > $deadline ) :
         if( 
+            is_front_page() || 
             is_page('login') || 
             is_page('registro') || 
             is_page('enviar-video')     
