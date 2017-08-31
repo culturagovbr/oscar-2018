@@ -75,6 +75,20 @@ function oscar_settings_init() {
         'oscar'
     );
 
+    add_settings_section(
+        'oscar_deadline_section',
+        'Prazo para inscrições',
+        '',
+        'oscar'
+    );
+
+    add_settings_section(
+        'oscar_debug_section',
+        'Para o desenvolvedor',
+        '',
+        'oscar'
+    );
+
     add_settings_field(
         'oscar_movie_extensions',
         'Extensões permitidas',
@@ -170,13 +184,37 @@ function oscar_settings_init() {
         ]
     );
 
+    add_settings_field(
+        'oscar_deadline_time',
+        'Data para encerramento das inscrições',
+        'oscar_deadline_time',
+        'oscar',
+        'oscar_deadline_section',
+        [
+            'label_for' => 'oscar_deadline_time',
+            'class' => 'form-field',
+        ]
+    );
+
+    add_settings_field(
+        'oscar_deadline_text',
+        'Mensagem para o usuário',
+        'oscar_deadline_text',
+        'oscar',
+        'oscar_deadline_section',
+        [
+            'label_for' => 'oscar_deadline_text',
+            'class' => 'form-field',
+        ]
+    );
+
     if( !empty($_GET['debug']) ){
         add_settings_field(
             'oscar_debug_view',
             'Debug',
             'oscar_debug_view',
             'oscar',
-            'oscar_mail_confirmation_section',
+            'oscar_debug_section',
             [
                 'label_for' => 'oscar_debug_view',
                 'class' => 'form-field',
@@ -188,7 +226,7 @@ function oscar_settings_init() {
             'Deletar envio de vídeo de usuário',
             'oscar_delete_user_video_sent_meta',
             'oscar',
-            'oscar_mail_confirmation_section',
+            'oscar_debug_section',
             [
                 'label_for' => 'oscar_delete_user_video_sent_meta',
                 'class' => 'form-field',
@@ -294,6 +332,23 @@ function oscar_monitoring_emails( $args ) {
     <p class="description">
         Estes emails receberão uma notificação sempre que for realizado uma inscrição ou edição do formulário de inscrição ao Oscar 2018. Separe múltiplos emails com vírgulas.
     </p>
+    <?php
+}
+
+function oscar_deadline_time( $args ) {
+    $options = get_option( 'oscar_options' ); ?>
+
+    <input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="oscar_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="text" value="<?php echo $options['oscar_deadline_time']; ?>">
+    <p class="description">
+        Seguindo o seguinte padrão: <b>AAAA-MM-DD 24:59:59</b>
+    </p>
+    <?php
+}
+
+function oscar_deadline_text( $args ) {
+    $options = get_option( 'oscar_options' ); ?>
+
+    <textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="oscar_options[<?php echo esc_attr( $args['label_for'] ); ?>]" rows="5"><?php echo $options['oscar_deadline_text']; ?></textarea>
     <?php
 }
 

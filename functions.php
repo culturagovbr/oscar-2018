@@ -615,3 +615,37 @@ $error_handler = new Raven_ErrorHandler($client);
 $error_handler->registerExceptionHandler();
 $error_handler->registerErrorHandler();
 $error_handler->registerShutdownFunction();
+
+function deadline_for_subscriptions() {
+    $oscar_options = get_option('oscar_options');
+    $deadline_saved =  $oscar_options['oscar_deadline_time'];
+    $deadline_text =  $oscar_options['oscar_deadline_text'];
+
+    date_default_timezone_set('Brazil/East');
+    $now = new DateTime();
+    $deadline = new DateTime($deadline_saved);
+
+    if( $now > $deadline ) :
+        if( 
+            is_page('login') || 
+            is_page('registro') || 
+            is_page('enviar-video')     
+        ) : ?>
+
+                <main class="container">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="alert alert-warning" role="alert" style="margin-top: 30px;">
+                                <?php echo $deadline_text; ?>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+            <?php get_footer();
+            exit;
+        endif;
+    else:
+        return false;
+    endif;
+}

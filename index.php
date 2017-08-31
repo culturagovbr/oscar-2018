@@ -5,6 +5,8 @@ if( is_front_page() ){
 get_header(); 
 ?>
 
+<?php if( !deadline_for_subscriptions() ): ?>
+
 <main class="container">
 	<div class="row">
 		<div class="col-sm-12">
@@ -60,5 +62,7 @@ get_header();
 		</div>
 	</div>
 </main>
+
+<?php endif; ?>
 
 <?php get_footer(); ?>
