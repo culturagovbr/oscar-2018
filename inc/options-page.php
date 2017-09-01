@@ -232,6 +232,18 @@ function oscar_settings_init() {
                 'class' => 'form-field',
             ]
         );
+
+        add_settings_field(
+            'oscar_users_that_can_surpass_deadline',
+            'Usuários além do prazo',
+            'oscar_users_that_can_surpass_deadline',
+            'oscar',
+            'oscar_debug_section',
+            [
+                'label_for' => 'oscar_users_that_can_surpass_deadline',
+                'class' => 'form-field',
+            ]
+        );
     }
 }
 
@@ -356,4 +368,14 @@ if( !empty( $_POST['delete_user_video_sent_meta'] ) ){
     if( !delete_user_meta($_POST['delete_user_video_sent_meta'], '_oscar_video_sent') ){
         error_log("Não foi possível remover a limitação para envio de usuários do ID " . $_POST['delete_user_video_sent_meta']);
     }
+}
+
+function oscar_users_that_can_surpass_deadline( $args ) {
+    $options = get_option( 'oscar_options' ); ?>
+
+    <input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="oscar_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="text" value="<?php echo $options['oscar_users_that_can_surpass_deadline']; ?>">
+    <p class="description">
+        ID dos usuários que poderão fazer login (em páginas alternativas, não com slug <b>login</b>) e enviar vídeos normalmente. Separe os usuários por vírgula.
+    </p>
+    <?php
 }

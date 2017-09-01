@@ -620,33 +620,39 @@ function deadline_for_subscriptions() {
     $oscar_options = get_option('oscar_options');
     $deadline_saved =  $oscar_options['oscar_deadline_time'];
     $deadline_text =  $oscar_options['oscar_deadline_text'];
+    $oscar_users_that_can_surpass_deadline =  $oscar_options['oscar_users_that_can_surpass_deadline'];
+
+    $oscar_users_that_can_surpass_deadline = explode(',', $oscar_users_that_can_surpass_deadline);
+    $current_user = wp_get_current_user();
 
     date_default_timezone_set('Brazil/East');
     $now = new DateTime();
     $deadline = new DateTime($deadline_saved);
 
-    if( $now > $deadline ) :
-        if( 
-            is_front_page() || 
-            is_page('login') || 
-            is_page('registro') || 
-            is_page('enviar-video')     
-        ) : ?>
+    if( !current_user_can('administrator') && !in_array( $current_user->ID, $oscar_users_that_can_surpass_deadline ) ) :
+        if( $now > $deadline ) :
+            if( 
+                is_front_page() || 
+                is_page('login') || 
+                is_page('registro') || 
+                is_page('enviar-video')     
+            ) : ?>
 
-                <main class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="alert alert-warning" role="alert" style="margin-top: 30px;">
-                                <?php echo $deadline_text; ?>
+                    <main class="container">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-warning" role="alert" style="margin-top: 30px;">
+                                    <?php echo $deadline_text; ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </main>
+                    </main>
 
-            <?php get_footer();
-            exit;
+                <?php get_footer();
+                exit;
+            endif;
+        else:
+            return false;
         endif;
-    else:
-        return false;
     endif;
 }
